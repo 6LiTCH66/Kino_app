@@ -12,12 +12,11 @@ namespace Kino_app
 {
     public partial class start_app : Form
     {
-        ListBox listBox;
         ComboBox comboBox;
         int i, j;
+        int suuremus;
         public start_app()
         {
-            listBox = new ListBox();
             comboBox = new ComboBox();
 
             InitializeComponent();
@@ -34,16 +33,19 @@ namespace Kino_app
             if (comboBox.SelectedIndex == 0)
             {
                 i = 5; j = 5;
+                suuremus = 1;
             }
             else if (comboBox.SelectedIndex == 1)
             {
                 i = 10; j = 10;
+                suuremus = 2;
             }
             else
             {
                 i = 15; j = 15;
+                suuremus = 3;
             }
-            Form1 form1 = new Form1(i, j);
+            Form1 form1 = new Form1(i, j, suuremus);
             form1.Show();
         }
     }

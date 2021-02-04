@@ -15,15 +15,53 @@ namespace Kino_app
     {
         Label[] labels;
         Label[,] _arr;
-        int _i, _j;
+        int getData1, getData2;
+        int[,] getArray;
         SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\source\repos\Kino_app\Kino_app\AppData\KinnoBaas.mdf;Integrated Security=True");
         SqlCommand command;
-        public Form1(int _i, int _j)
+        int Suuremus;
+        public Form1(int _i, int _j, int size)
         {
             _arr = new Label[_i, _j];
+
+            getArray = new int[_i, _j];
+
             labels = new Label[_i];
+            
+            Suuremus = size;
+
             this.Text = "Ap_polo_kino";
-            this.Size = new Size(300, 430); 
+            this.Size = new Size(300, 430);
+
+            connection.Open();
+            command = new SqlCommand("SELECT rida, koht FROM dbo.KinnoTable WHERE SaaliSuuremus=@SaaliSuuremus", connection);
+
+            command.Parameters.AddWithValue("@SaaliSuuremus", Suuremus);
+
+            command.ExecuteNonQuery();
+            SqlDataReader dataReader = command.ExecuteReader();
+
+            while (dataReader.Read())
+            {
+                getData1 = Convert.ToInt32(dataReader.GetValue(0)) - 1;
+                getData2 = Convert.ToInt32(dataReader.GetValue(1)) - 1;
+
+
+                string ConvertInt = (getData1, getData2).ToString();
+
+                for (int x = 0; x < _i; x++)
+                {
+                    for (int y = 0; y < _j; y++)
+                    {
+                        if (getData1 == x && getData2 == y)
+                        {
+                            getArray[x, y] = 1;
+                        }
+                        
+                    }
+                }
+            }
+            connection.Close();
 
             for (int i = 0; i < _i; i++)
             {
@@ -35,7 +73,14 @@ namespace Kino_app
                 for (int j = 0; j < _j; j++)
                 {
                     _arr[i, j] = new Label();
-                    _arr[i, j].BackColor = Color.Gray;
+                    if (getArray[i,j] == 1)
+                    {
+                        _arr[i, j].BackColor = Color.Red;
+                    }
+                    else
+                    {
+                        _arr[i, j].BackColor = Color.Green;
+                    }
                     _arr[i, j].Text = " Koht" + (j + 1);
                     _arr[i, j].Size = new Size(50, 50);
                     _arr[i, j].BorderStyle = BorderStyle.Fixed3D;
@@ -46,27 +91,43 @@ namespace Kino_app
                     
                 }
             }
+            
 
         }
 
         private void Form1_Click(object sender, EventArgs e)
         {
             Label lbl = sender as Label;
-            lbl.BackColor = Color.Yellow;
+            
 
-            var tag = (int[])lbl.Tag;
+            if (lbl.BackColor == Color.Red)
+            {
 
-            connection.Open();
-            command = new SqlCommand("INSERT INTO KinnoTable(rida, koht) VALUES(@rida, @koht)", connection);
+                MessageBox.Show("Koht on juba registreeritud!!!!");
+                
+            }
+            else
+            {
+                lbl.BackColor = Color.Yellow;
+                var tag = (int[])lbl.Tag;
 
-            command.Parameters.AddWithValue("@rida", (tag[0] + 1));
-            command.Parameters.AddWithValue("@koht", (tag[1] + 1));
+                connection.Open();
+                command = new SqlCommand("INSERT INTO KinnoTable(rida, koht, SaaliSuuremus) VALUES(@rida, @koht, @saaliSuuremus)", connection);
 
-            command.ExecuteNonQuery();
-            connection.Close();
-            MessageBox.Show("Andmed on lisatud");
+                command.Parameters.AddWithValue("@rida", (tag[0] + 1));
+                command.Parameters.AddWithValue("@koht", (tag[1] + 1));
+                command.Parameters.AddWithValue("@saaliSuuremus", Suuremus);
 
-            MessageBox.Show((tag[0] + 1) .ToString() + " " + (tag[1] + 1).ToString());
+                command.ExecuteNonQuery();
+                connection.Close();
+                MessageBox.Show("Andmed on lisatud");
+                lbl.BackColor = Color.Red;
+
+                MessageBox.Show((tag[0] + 1).ToString() + " " + (tag[1] + 1).ToString());
+            }
+
+
+           
         }
     }
 }

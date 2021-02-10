@@ -20,7 +20,10 @@ namespace Kino_app
         SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\source\repos\Kino_app\Kino_app\AppData\KinnoBaas.mdf;Integrated Security=True");
         SqlCommand command;
         int Suuremus;
-        public Form1(int _i, int _j, int size)
+        string SelectedFilm;
+        DateTime getDate;
+        
+        public Form1(int _i, int _j, int size, string film, DateTimePicker dateTimePicker)
         {
             _arr = new Label[_i, _j];
 
@@ -29,6 +32,10 @@ namespace Kino_app
             labels = new Label[_i];
             
             Suuremus = size;
+
+            SelectedFilm = film;
+
+            getDate = dateTimePicker.Value;
 
             this.Text = "Ap_polo_kino";
             this.Size = new Size(300, 430);
@@ -112,11 +119,13 @@ namespace Kino_app
                 var tag = (int[])lbl.Tag;
 
                 connection.Open();
-                command = new SqlCommand("INSERT INTO KinnoTable(rida, koht, SaaliSuuremus) VALUES(@rida, @koht, @saaliSuuremus)", connection);
+                command = new SqlCommand("INSERT INTO KinnoTable(rida, koht, SaaliSuuremus, filmiNimetus, aeg) VALUES(@rida, @koht, @saaliSuuremus, @filmiNimetus, @aeg)", connection);
 
                 command.Parameters.AddWithValue("@rida", (tag[0] + 1));
                 command.Parameters.AddWithValue("@koht", (tag[1] + 1));
                 command.Parameters.AddWithValue("@saaliSuuremus", Suuremus);
+                command.Parameters.AddWithValue("@filmiNimetus", SelectedFilm);
+                command.Parameters.AddWithValue("@aeg", getDate);
 
                 command.ExecuteNonQuery();
                 connection.Close();

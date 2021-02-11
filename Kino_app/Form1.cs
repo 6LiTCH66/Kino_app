@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -22,7 +23,8 @@ namespace Kino_app
         int Suuremus;
         string SelectedFilm;
         DateTime getDate;
-        
+
+
         public Form1(int _i, int _j, int size, string film, DateTimePicker dateTimePicker)
         {
             _arr = new Label[_i, _j];
@@ -36,6 +38,8 @@ namespace Kino_app
             SelectedFilm = film;
 
             getDate = dateTimePicker.Value;
+
+
 
             this.Text = "Ap_polo_kino";
             this.Size = new Size(300, 430);
@@ -105,8 +109,8 @@ namespace Kino_app
         private void Form1_Click(object sender, EventArgs e)
         {
             Label lbl = sender as Label;
-            
 
+            var tag = (int[])lbl.Tag;
             if (lbl.BackColor == Color.Red)
             {
 
@@ -115,24 +119,13 @@ namespace Kino_app
             }
             else
             {
+                
+
+                MailForm mailForm = new MailForm(tag, Suuremus, SelectedFilm, getDate, lbl);
+
+                mailForm.Show();
+
                 lbl.BackColor = Color.Yellow;
-                var tag = (int[])lbl.Tag;
-
-                connection.Open();
-                command = new SqlCommand("INSERT INTO KinnoTable(rida, koht, SaaliSuuremus, filmiNimetus, aeg) VALUES(@rida, @koht, @saaliSuuremus, @filmiNimetus, @aeg)", connection);
-
-                command.Parameters.AddWithValue("@rida", (tag[0] + 1));
-                command.Parameters.AddWithValue("@koht", (tag[1] + 1));
-                command.Parameters.AddWithValue("@saaliSuuremus", Suuremus);
-                command.Parameters.AddWithValue("@filmiNimetus", SelectedFilm);
-                command.Parameters.AddWithValue("@aeg", getDate);
-
-                command.ExecuteNonQuery();
-                connection.Close();
-                MessageBox.Show("Andmed on lisatud");
-                lbl.BackColor = Color.Red;
-
-                MessageBox.Show((tag[0] + 1).ToString() + " " + (tag[1] + 1).ToString());
             }
 
 

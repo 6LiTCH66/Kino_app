@@ -21,7 +21,6 @@ namespace Kino_app
         Label lbl, lbl2, lbl3;
         CheckBox GetCheck;
         DateTimePicker timePicker;
-        string CheckedFilm;
         Button btn;
         string selectedFilm;
         
@@ -89,14 +88,35 @@ namespace Kino_app
 
         private void Btn_Click(object sender, EventArgs e)
         {
-            
-            if (comboBox.SelectedIndex > -1 && GetCheck.Text != "")
+            try
             {
-                selectedFilm = GetCheck.Text;
+                if (comboBox.SelectedIndex > -1 && GetCheck.Checked == true)
+                {
+                    selectedFilm = GetCheck.Text;
 
-                Form1 form1 = new Form1(i, j, suuremus, selectedFilm, timePicker);
-                form1.Show();
+                    Form1 form1 = new Form1(i, j, suuremus, selectedFilm, timePicker);
+                    form1.Show();
+                }
+                else if (comboBox.SelectedText == "" && GetCheck.Checked == true)
+                {
+                    MessageBox.Show("Vali saal!!!");
+                }
+                else if (GetCheck.Checked == false && comboBox.SelectedIndex > -1)
+                {
+                    MessageBox.Show("Vali Film!!!");
+                }
+                else if (comboBox.SelectedText == "" && GetCheck.Checked == false)
+                {
+                    MessageBox.Show("Vali Film ja saal");
+                }
             }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Vali Film!!!");
+            }
+            
+            
         }
 
         private void Start_app_CheckedChanged(object sender, EventArgs e)
@@ -110,17 +130,32 @@ namespace Kino_app
             {
                 i = 5; j = 5;
                 suuremus = 1;
+                checkBoxes[4].Enabled = false;
+                checkBoxes[3].Enabled = false;
+                checkBoxes[2].Enabled = false;
+                checkBoxes[4].Checked = false;
+                checkBoxes[2].Checked = false;
+                checkBoxes[3].Checked = false;
+
 
             }
             else if (comboBox.SelectedIndex == 1)
             {
                 i = 10; j = 10;
                 suuremus = 2;
+                checkBoxes[4].Enabled = false;
+                checkBoxes[3].Enabled = true;
+                checkBoxes[2].Enabled = false;
+                checkBoxes[4].Enabled = false;
+                checkBoxes[2].Enabled = false;
             }
             else
             {
                 i = 15; j = 15;
                 suuremus = 3;
+                checkBoxes[4].Enabled = true;
+                checkBoxes[3].Enabled = true;
+                checkBoxes[2].Enabled = true;
             }
 
         }

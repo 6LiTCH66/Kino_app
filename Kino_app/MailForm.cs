@@ -45,6 +45,7 @@ namespace Kino_app
 
             };
             lbl.Location = new Point(181, 67);
+
             lbl1 = new Label()
             {
                 Text = "Email",
@@ -90,7 +91,7 @@ namespace Kino_app
 
         private void EsitaBtn_Click(object sender, EventArgs e)
         {
-            string adress = "ilja200303@gmail.com";
+            string adress = EmailTxt.Text;
             string Salasona = System.IO.File.ReadAllText(@"C:\Users\opilane\Desktop\Password.txt");
             try
             {
@@ -104,8 +105,8 @@ namespace Kino_app
                 };
                 mail.From = new MailAddress("iljaharbi@gmail.com");
                 mail.To.Add(adress);
-                mail.Subject = "test";
-                mail.Body = "test";
+                mail.Subject = NimiTxt.Text + " Filmi Rida " + _tag[0].ToString() + " ja Koht " + _tag[1].ToString();
+                mail.Body = "Sa valitud film " + _SelectedFilm;
                 smtpClient.Send(mail);
 
 

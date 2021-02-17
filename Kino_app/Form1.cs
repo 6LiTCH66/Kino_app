@@ -25,7 +25,7 @@ namespace Kino_app
         DateTime getDate;
 
 
-        public Form1(int _i, int _j, int size, string film, DateTimePicker dateTimePicker)
+        public Form1(int _i, int _j, int size, string film, DateTime dateTimePicker)
         {
             _arr = new Label[_i, _j];
 
@@ -37,7 +37,7 @@ namespace Kino_app
 
             SelectedFilm = film;
 
-            getDate = dateTimePicker.Value;
+            getDate = dateTimePicker;
 
 
 
@@ -113,14 +113,11 @@ namespace Kino_app
             var tag = (int[])lbl.Tag;
             if (lbl.BackColor == Color.Red)
             {
-
                 MessageBox.Show("Koht on juba registreeritud!!!!");
-                
             }
             else
             {
                 
-
                 MailForm mailForm = new MailForm(tag, Suuremus, SelectedFilm, getDate, lbl);
 
                 mailForm.Show();

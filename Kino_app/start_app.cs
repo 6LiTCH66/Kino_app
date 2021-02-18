@@ -17,47 +17,74 @@ namespace Kino_app
         int i, j;
         int suuremus;
 
-        //static string[] Filmid = new string[] { "Jõulud džunglis", "Koletisekütt", "Hing", "Tulemeri", "Laululind", "Võlukaar" };
-        //static int FilLen = Filmid.Length;
-
         CheckBox[] checkBoxes;
         Label lbl, lbl2, lbl3, lbl4;
         CheckBox GetCheck;
         DateTimePicker timePicker;
         Button btn;
-        string selectedFilm;
         ListBox listBox;
         DateTime SelecetedTime;
-        DateTime[] VaikeSaalAeg = new DateTime[] { 
-            new DateTime(2021, 11, 25, 14, 10, 10),
-            new DateTime(2021, 11, 20, 20, 10, 10),
-            new DateTime(2021, 11, 15, 12, 25, 00) };
 
-        DateTime[] KeskmineSaalAeg = new DateTime[] { 
-            new DateTime(2021, 11, 10, 10, 00, 00),
-            new DateTime(2021, 11, 13, 14, 30, 00),
-            new DateTime(2021, 11, 14, 19,00,10),
-            new DateTime(2021, 12, 15, 20, 30, 10),
-            new DateTime(2021, 12, 16, 21, 55, 05)};
-        DateTime[] SuurSaalAeg = new DateTime[] { 
-            new DateTime(2021, 11, 16, 11, 10, 00),
-            new DateTime(2021, 11, 17, 15, 10, 05),
-            new DateTime(2021, 11, 18, 19, 45, 00),
-            new DateTime(2021, 12, 01, 12, 45, 00),
-            new DateTime(2021, 12, 02, 15, 50, 00),
-            new DateTime(2021, 12, 03, 18, 55, 00),
-            new DateTime(2021, 12, 05, 23, 59, 59)
-        };
+
+        Button AdminPanelBtn;
 
         SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\source\repos\Kino_app\Kino_app\AppData\KinnoBaas.mdf;Integrated Security=True");
         SqlCommand command;
+        List<DateTime> dateTimes;
+        List<string> GetCategory;
+        int GetIdFilm;
+        int GetIdTime;
 
-        string[] Ketegooria = new string[] { "Komöödiafilm", "Noortefilm", "Romantilised", "Muusika" };
         public start_app()
         {
             InitializeComponent();
 
             List<string> valueList = new List<string>();
+            dateTimes = new List<DateTime>();
+
+            GetCategory = new List<string>();
+
+            try
+            {
+                command = new SqlCommand("SELECT KategooriNime, Id FROM dbo.Category", connection);
+                connection.Open();
+                SqlDataReader sqlData = command.ExecuteReader();
+                while (sqlData.Read())
+                {
+                    GetCategory.Add(sqlData[0].ToString());
+                }
+                sqlData.Close();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Viga!!!");
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            try
+            {
+                command = new SqlCommand("SELECT aeg, Id FROM dbo.FilmTime", connection);
+                connection.Open();
+                SqlDataReader dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    dateTimes.Add(DateTime.Parse(dataReader[0].ToString()));
+                }
+                dataReader.Close();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Viga!!!");
+            }
+            finally
+            {
+                connection.Close();
+            }
 
 
             try
@@ -76,7 +103,7 @@ namespace Kino_app
             catch (Exception ex)
             {
 
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show("Viga!!!");
             }
             finally
             {
@@ -125,6 +152,14 @@ namespace Kino_app
                 Size = new Size(215, 82),
 
             };
+            AdminPanelBtn = new Button()
+            {
+                Text = "Admin Panel",
+                Size = new Size(93, 28)
+            };
+            AdminPanelBtn.Location = new Point(695, 410);
+            AdminPanelBtn.Click += AdminPanelBtn_Click;
+            
 
 
             int x = 5, y = 20;
@@ -142,9 +177,9 @@ namespace Kino_app
             comboBox.Items.Add("Keskmine");
             comboBox.Items.Add("Suur");
 
-            for (int i = 0; i < Ketegooria.Length; i++)
+            for (int i = 0; i < GetCategory.Count; i++)
             {
-                comboBox1.Items.Add(Ketegooria[i]);
+                comboBox1.Items.Add(GetCategory[i]);
             }
 
             lbl2.Location = new Point(6, 100);
@@ -166,9 +201,11 @@ namespace Kino_app
             this.Controls.Add(comboBox);
             this.Controls.Add(listBox);
             this.Controls.Add(comboBox1);
+            this.Controls.Add(AdminPanelBtn);
 
 
             comboBox.SelectedIndexChanged += ComboBox_SelectedIndexChanged;
+            comboBox.Enabled = false;
 
             comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
 
@@ -177,10 +214,18 @@ namespace Kino_app
 
         }
 
+        private void AdminPanelBtn_Click(object sender, EventArgs e)
+        {
+            AdminForm adminForm = new AdminForm();
+            adminForm.Show();
+        }
+
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             if (comboBox1.SelectedIndex == 0)
             {
+
                 listBox.Items.Clear();
                 i = 5; j = 5;
                 suuremus = 1;
@@ -191,9 +236,9 @@ namespace Kino_app
                 checkBoxes[2].Checked = false;
                 checkBoxes[3].Checked = false;
 
-                for (int i = 0; i < VaikeSaalAeg.Length; i++)
+                for (int i = 0; i < 4; i++)
                 {
-                    listBox.Items.Add(VaikeSaalAeg[i]);
+                    listBox.Items.Add(dateTimes[i]);
                 }
                 comboBox.SelectedItem = "Väike";
 
@@ -210,9 +255,9 @@ namespace Kino_app
                 checkBoxes[4].Enabled = false;
                 checkBoxes[2].Enabled = false;
 
-                for (int i = 0; i < KeskmineSaalAeg.Length; i++)
+                for (int i = 0; i < 7; i++)
                 {
-                    listBox.Items.Add(KeskmineSaalAeg[i]);
+                    listBox.Items.Add(dateTimes[i]);
                 }
                 comboBox.SelectedItem = "Keskmine";
             }
@@ -225,9 +270,9 @@ namespace Kino_app
                 checkBoxes[3].Enabled = true;
                 checkBoxes[2].Enabled = true;
 
-                for (int i = 0; i < SuurSaalAeg.Length; i++)
+                for (int i = 0; i < 10; i++)
                 {
-                    listBox.Items.Add(SuurSaalAeg[i]);
+                    listBox.Items.Add(dateTimes[i]);
                 }
                 comboBox.SelectedItem = "Suur";
             }
@@ -240,9 +285,9 @@ namespace Kino_app
                 checkBoxes[3].Enabled = true;
                 checkBoxes[2].Enabled = false;
 
-                for (int i = 0; i < SuurSaalAeg.Length; i++)
+                for (int i = 0; i < dateTimes.Count; i++)
                 {
-                    listBox.Items.Add(SuurSaalAeg[i]);
+                    listBox.Items.Add(dateTimes[i]);
                 }
                 comboBox.SelectedItem = "Keskmine";
             }
@@ -252,7 +297,7 @@ namespace Kino_app
         {
             ListBox GetListBox = (ListBox)sender;
             SelecetedTime = DateTime.Parse(GetListBox.SelectedItem.ToString());
-            MessageBox.Show(GetListBox.SelectedItem.ToString()) ;
+            MessageBox.Show(GetListBox.SelectedItem.ToString());
         }
 
         private void Btn_Click(object sender, EventArgs e)
@@ -261,9 +306,47 @@ namespace Kino_app
             {
                 if (comboBox.SelectedIndex > -1 && GetCheck.Checked == true)
                 {
-                    selectedFilm = GetCheck.Text;
 
-                    Form1 form1 = new Form1(i, j, suuremus, selectedFilm, SelecetedTime);
+                    // get FilmiNime_Id from Film Table 
+                    // GetCheck = Film Name
+                    try
+                    {
+                        connection.Open();
+                        command = new SqlCommand("SELECT Id FROM dbo.Film WHERE FilmiNimi=@FilmNime", connection);
+                        command.Parameters.AddWithValue("@FilmNime", GetCheck.Text);
+                        GetIdFilm = Convert.ToInt32(command.ExecuteScalar());
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+
+                    try
+                    {
+                        connection.Open();
+                        command = new SqlCommand("SELECT Id FROM FilmTime WHERE aeg=@SelectedAeg", connection);
+                        command.Parameters.AddWithValue("@SelectedAeg", SelecetedTime);
+                        GetIdTime = Convert.ToInt32(command.ExecuteScalar());
+
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+
+                    Form1 form1 = new Form1(i, j, suuremus, GetIdFilm, GetIdTime);
                     form1.Show();
                 }
                 else if (comboBox.SelectedText == "" && GetCheck.Checked == true)

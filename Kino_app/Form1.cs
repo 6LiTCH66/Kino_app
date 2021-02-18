@@ -21,11 +21,11 @@ namespace Kino_app
         SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\source\repos\Kino_app\Kino_app\AppData\KinnoBaas.mdf;Integrated Security=True");
         SqlCommand command;
         int Suuremus;
-        string SelectedFilm;
-        DateTime getDate;
+        int SelectedFilm_Id;
+        int getDate;
 
 
-        public Form1(int _i, int _j, int size, string film, DateTime dateTimePicker)
+        public Form1(int _i, int _j, int size, int film_Id, int dateTimePicker)
         {
             _arr = new Label[_i, _j];
 
@@ -35,7 +35,7 @@ namespace Kino_app
             
             Suuremus = size;
 
-            SelectedFilm = film;
+            SelectedFilm_Id = film_Id;
 
             getDate = dateTimePicker;
 
@@ -118,7 +118,7 @@ namespace Kino_app
             else
             {
                 
-                MailForm mailForm = new MailForm(tag, Suuremus, SelectedFilm, getDate, lbl);
+                MailForm mailForm = new MailForm(tag, Suuremus, SelectedFilm_Id, getDate, lbl);
 
                 mailForm.Show();
 

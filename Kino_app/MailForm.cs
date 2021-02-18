@@ -14,21 +14,19 @@ namespace Kino_app
 {
     public partial class MailForm : Form
     {
-        Label lbl, lbl1;
+        Label lbl1;
         TextBox NimiTxt, EmailTxt;
         Button EsitaBtn;
-        string SaadaEmail;
-        string SaadaNimi;
         int[] _tag;
         int _Suuremus;
-        string _SelectedFilm;
-        DateTime dateTime;
+        int _SelectedFilm;
+        int dateTime;
         Label _lbl;
 
         SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\source\repos\Kino_app\Kino_app\AppData\KinnoBaas.mdf;Integrated Security=True");
         SqlCommand command;
 
-        public MailForm(int[] tag, int Suuremus, string SelectedFilm, DateTime dateTimePicker, Label lbl)
+        public MailForm(int[] tag, int Suuremus, int SelectedFilm, int dateTimePicker, Label lbl)
         {
             
 
@@ -80,7 +78,6 @@ namespace Kino_app
             EsitaBtn.Location = new Point(284, 193);
 
 
-
             this.Controls.Add(lbl);
             this.Controls.Add(lbl1);
             this.Controls.Add(NimiTxt);
@@ -105,7 +102,7 @@ namespace Kino_app
                 };
                 mail.From = new MailAddress("iljaharbi@gmail.com");
                 mail.To.Add(adress);
-                mail.Subject = NimiTxt.Text + " Filmi Rida " + _tag[0].ToString() + " ja Koht " + _tag[1].ToString();
+                mail.Subject = NimiTxt.Text + " Filmi Rida " + (_tag[0] + 1).ToString() + " ja Koht " + (_tag[1] + 1).ToString();
                 mail.Body = "Sa valitud film " + _SelectedFilm;
                 smtpClient.Send(mail);
 
@@ -125,7 +122,6 @@ namespace Kino_app
                 _lbl.BackColor = Color.Red;
 
                 MessageBox.Show((_tag[0] + 1).ToString() + " " + (_tag[1] + 1).ToString());
-
 
             }
 

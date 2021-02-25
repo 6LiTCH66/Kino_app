@@ -37,8 +37,8 @@ namespace Kino_app
             InitializeComponent();
 
             List<string> valueList = new List<string>();
-            dateTimes = new List<DateTime>();
 
+            dateTimes = new List<DateTime>();
             GetCategory = new List<string>();
 
             try
@@ -52,7 +52,7 @@ namespace Kino_app
                 }
                 sqlData.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 MessageBox.Show("Viga!!!");
@@ -73,7 +73,7 @@ namespace Kino_app
                 }
                 dataReader.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 MessageBox.Show("Viga!!!");
@@ -97,7 +97,7 @@ namespace Kino_app
                 }
                 reader.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 MessageBox.Show("Viga!!!");
@@ -150,7 +150,6 @@ namespace Kino_app
 
             };
             
-
 
             int x = 5, y = 20;
             for (int i = 0; i < valueList.Count; i++)
@@ -289,9 +288,6 @@ namespace Kino_app
             {
                 if (comboBox.SelectedIndex > -1 && GetCheck.Checked == true)
                 {
-
-                    // get FilmiNime_Id from Film Table 
-                    // GetCheck = Film Name
                     try
                     {
                         connection.Open();
@@ -300,10 +296,10 @@ namespace Kino_app
                         GetIdFilm = Convert.ToInt32(command.ExecuteScalar());
 
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
 
-                        MessageBox.Show(ex.ToString());
+                        MessageBox.Show("Viga!!!");
                     }
                     finally
                     {
@@ -319,10 +315,10 @@ namespace Kino_app
 
 
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
 
-                        MessageBox.Show(ex.ToString());
+                        MessageBox.Show("Viga!!!");
                     }
                     finally
                     {
@@ -345,10 +341,10 @@ namespace Kino_app
                     MessageBox.Show("Vali Film ja saal");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                MessageBox.Show("Sa midagi ei valitud!!!");
+                MessageBox.Show("Sa midagi ei valisid!!!");
             }
             
             

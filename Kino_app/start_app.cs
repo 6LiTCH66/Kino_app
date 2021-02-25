@@ -25,9 +25,6 @@ namespace Kino_app
         ListBox listBox;
         DateTime SelecetedTime;
 
-
-        Button AdminPanelBtn;
-
         SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\source\repos\Kino_app\Kino_app\AppData\KinnoBaas.mdf;Integrated Security=True");
         SqlCommand command;
         List<DateTime> dateTimes;
@@ -152,13 +149,6 @@ namespace Kino_app
                 Size = new Size(215, 82),
 
             };
-            AdminPanelBtn = new Button()
-            {
-                Text = "Admin Panel",
-                Size = new Size(93, 28)
-            };
-            AdminPanelBtn.Location = new Point(695, 410);
-            AdminPanelBtn.Click += AdminPanelBtn_Click;
             
 
 
@@ -201,7 +191,6 @@ namespace Kino_app
             this.Controls.Add(comboBox);
             this.Controls.Add(listBox);
             this.Controls.Add(comboBox1);
-            this.Controls.Add(AdminPanelBtn);
 
 
             comboBox.SelectedIndexChanged += ComboBox_SelectedIndexChanged;
@@ -214,11 +203,6 @@ namespace Kino_app
 
         }
 
-        private void AdminPanelBtn_Click(object sender, EventArgs e)
-        {
-            AdminForm adminForm = new AdminForm();
-            adminForm.Show();
-        }
 
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {

@@ -22,6 +22,7 @@ namespace Kino_app
         int _SelectedFilm;
         int dateTime;
         Label _lbl;
+        string GetSelecedFilm;
 
         SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\source\repos\Kino_app\Kino_app\AppData\KinnoBaas.mdf;Integrated Security=True");
         SqlCommand command;
@@ -90,6 +91,16 @@ namespace Kino_app
         {
             string adress = EmailTxt.Text;
             string Salasona = System.IO.File.ReadAllText(@"C:\Users\opilane\Desktop\Password.txt");
+            connection.Open();
+            command = new SqlCommand("SELECT FilmiNimi FROM dbo.Film WHERE Id=@Selceted_id", connection);
+            command.Parameters.AddWithValue("@Selceted_id", _SelectedFilm);
+            command.ExecuteNonQuery();
+            SqlDataReader dataReader = command.ExecuteReader();
+            while (dataReader.Read())
+            {
+                GetSelecedFilm = dataReader.GetValue(0).ToString();
+            }
+            connection.Close();
             try
             {
 
@@ -103,7 +114,7 @@ namespace Kino_app
                 mail.From = new MailAddress("iljaharbi@gmail.com");
                 mail.To.Add(adress);
                 mail.Subject = NimiTxt.Text + " Filmi Rida " + (_tag[0] + 1).ToString() + " ja Koht " + (_tag[1] + 1).ToString();
-                mail.Body = "Sa valitud film " + _SelectedFilm;
+                mail.Body = "Sa valisid film " + GetSelecedFilm;
                 smtpClient.Send(mail);
 
 
@@ -118,10 +129,8 @@ namespace Kino_app
 
                 command.ExecuteNonQuery();
                 connection.Close();
-                MessageBox.Show("Andmed on lisatud");
                 _lbl.BackColor = Color.Red;
-
-                MessageBox.Show((_tag[0] + 1).ToString() + " " + (_tag[1] + 1).ToString());
+                this.Close();
 
             }
 

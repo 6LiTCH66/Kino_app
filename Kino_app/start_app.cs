@@ -281,7 +281,6 @@ namespace Kino_app
         {
             ListBox GetListBox = (ListBox)sender;
             SelecetedTime = DateTime.Parse(GetListBox.SelectedItem.ToString());
-            MessageBox.Show(GetListBox.SelectedItem.ToString());
         }
 
         private void Btn_Click(object sender, EventArgs e)
